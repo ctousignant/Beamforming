@@ -6,17 +6,20 @@ c = 3e8;        % signal propagation speed
 fc = 22e6;       % signal carrier frequency
 lambda = c/fc;  % wavelength
 
-thetaad = 30;           % look directions
-thetaan = 90;           % interference direction
+thetaad = 30;           % look directions (degrees)
+thetaan = 70;           % interference direction (degrees)
 
 antenna = monopole('GroundPlaneLength', 43, 'GroundPlaneWidth', 43, 'Height', 43, 'Width', 0.25)
-ula = phased.ULA('NumElements',20,'Element',antenna, 'ElementSpacing', lambda/2);
+ula = phased.ULA('NumElements',8,'Element', antenna, 'ElementSpacing', lambda/2);
 
+% Generalized sidelobe canceller
 % Calculate the steering vector for null directions
 wn = steervec(getElementPosition(ula)/lambda,thetaan);
 
 % Calculate the steering vectors for lookout directions
 wd = steervec(getElementPosition(ula)/lambda,thetaad);
+win = kaiser(8,4);
+wd = win.*wd;
 
 % Compute the response of desired steering at null direction
 rn = wn'*wd/(wn'*wn);
@@ -26,11 +29,15 @@ w = wd-wn*rn;
 
 % Plot the pattern
 figure
-pattern(ula,fc,-180:180,0,'PropagationSpeed',c,'Type','powerdb',...
+pattern(ula,fc,-180:0.2:180,0,'PropagationSpeed',c,'Type','powerdb',...
     'CoordinateSystem','rectangular','Weights',w);
 hold on; legend off;
-plot([thetaan thetaan],[-100 100],'r--','LineWidth',2)
-plot([thetaad thetaad],[-100 100],'g--','LineWidth',2)
+for i = 1:length(thetaan)
+    plot([thetaan(i) thetaan(i)],[-100 100],'r--','LineWidth',2)
+end
+for z = 1:length(thetaad)
+    plot([thetaad(z) thetaad(z)],[-100 100],'g--','LineWidth',2)
+end
 hold off;
 
 % Zoom
@@ -38,8 +45,12 @@ figure
 pattern(ula,fc,-180:180,0,'PropagationSpeed',c,'Type','powerdb',...
     'CoordinateSystem','rectangular','Weights',w);
 hold on; legend off;
-plot([thetaan thetaan],[-100 100],'r--','LineWidth',2)
-plot([thetaad thetaad],[-100 100],'g--','LineWidth',2)
+for a = 1:length(thetaan)
+    plot([thetaan(a) thetaan(a)],[-100 100],'r--','LineWidth',2)
+end
+for b = 1:length(thetaad)
+    plot([thetaad(b) thetaad(b)],[-100 100],'g--','LineWidth',2)
+end
 xlim([thetaan-10 thetaan+10])
 legend(arrayfun(@(k)sprintf('%d degrees',k),thetaad,...
     'UniformOutput',false),'Location','SouthEast');
