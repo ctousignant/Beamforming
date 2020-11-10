@@ -6,15 +6,15 @@ c = 299792458;        % signal propagation speed
 fc = 22e6;       % signal carrier frequency
 lambda = c/fc;  % wavelength
 
-az_target = 0;     % target azimuth (degrees)
-az_null = 65;       % interference direction (degrees)
+az_target = 90;     % target azimuth (degrees)
+az_null = 0;       % interference direction (degrees)
 ele_target = 0;    % target elevation (degrees)
-ele_null = 45;      % null elevation (degrees)
+ele_null = 0;      % null elevation (degrees)
 
 antenna = monopoleRadial('Height',lambda/4,'RadialLength',lambda/4,'Width',.1,'RadialWidth',.1,'NumRadials',4);
 %antenna = monopole('GroundPlaneLength', 43, 'GroundPlaneWidth', 43, 'Height', lambda/4, 'Width', 0.1)
-%array = phased.ULA('NumElements',8,'Element', antenna, 'ElementSpacing', lambda/2);
-array = phased.UCA('NumElements',8,'Element', antenna, 'Radius', lambda/2);
+array = phased.ULA('NumElements',8,'Element', antenna, 'ElementSpacing', lambda/2);
+%array = phased.UCA('NumElements',8,'Element', antenna, 'Radius', lambda/2);
 
 % Generalized sidelobe canceller
 % Calculate the steering vector for null directions
@@ -59,16 +59,28 @@ end
 xlim([az_null-10 az_null+10])
 legend(arrayfun(@(k)sprintf('%d degrees',k),az_target,...
     'UniformOutput',false),'Location','SouthEast');
+hold off;
 
 % 3-D
 figure
 rotate3d on
-pattern(array,fc,'CoordinateSystem','polar','Type','powerdb',...
+pattern(array,fc,-180:0.5:180,-90:.5:90,'CoordinateSystem','polar','Type','powerdb',...
         'PropagationSpeed',c,'Weights',w);
 view([45 45]);
+axis vis3d
+
+% phi = az';
+% theta = (90-el);
+% MagE = efield';
+
+%figure
+
+%patternCustom(MagE,theta,phi);
+
+
 %ax = gca;
 %ax.Position = [-0.15 0.1 0.9 0.8];
 %camva(4.5);
 %campos([1000 -500 500]);
 
-%viewArray(array)
+%show(antenna)
