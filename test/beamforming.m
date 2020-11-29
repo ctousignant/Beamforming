@@ -18,8 +18,8 @@ wn = steervec(getElementPosition(ula)/lambda,thetaan);
 
 % Calculate the steering vectors for lookout directions
 wd = steervec(getElementPosition(ula)/lambda,thetaad);
-win = kaiser(8,4);
-wd = win.*wd;
+% win = kaiser(8,4);
+% wd = win.*wd;
 
 % Compute the response of desired steering at null direction
 rn = wn'*wd/(wn'*wn);
@@ -51,7 +51,7 @@ end
 for b = 1:length(thetaad)
     plot([thetaad(b) thetaad(b)],[-100 100],'g--','LineWidth',2)
 end
-xlim([thetaan-10 thetaan+10])
+xlim([min(thetaan-10) max(thetaan+10)])
 legend(arrayfun(@(k)sprintf('%d degrees',k),thetaad,...
     'UniformOutput',false),'Location','SouthEast');
 
@@ -59,7 +59,7 @@ legend(arrayfun(@(k)sprintf('%d degrees',k),thetaad,...
 figure
 rotate3d on
 pattern(ula,fc,'CoordinateSystem','polar','Type','powerdb',...
-        'PropagationSpeed',c,'Weights',w);
+        'PropagationSpeed',c,'Weights',w(:,1));
 view(50,20);
 ax = gca;
 %ax.Position = [-0.15 0.1 0.9 0.8];
