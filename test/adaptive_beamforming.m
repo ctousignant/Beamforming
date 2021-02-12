@@ -14,6 +14,7 @@ nullSpacing = 5;      % Null spacing in degrees
 c = physconst('LightSpeed'); % signal propagation speed
 lambda = c/fc;               % wavelength
 reservedDOF = [1 1 1 2 2 2]; % Reserved Degrees of Freedom based on N [3 4 ... 8]
+%reservedDOF = [1 1 1 2 2 3]; % Reserved Degrees of Freedom based on N [3 4 ... 8]
 
 %% Globally Scoped Defines
 availableNulls = 0;
@@ -25,7 +26,9 @@ desiredResponse = [];
 antennaWeights = [];
 
 %% Physical Array
-antenna = monopole('GroundPlaneLength', 43, 'GroundPlaneWidth', 43, 'Height', lambda/4, 'Width', 0.1);
+% antenna = monopole('GroundPlaneLength', 43, 'GroundPlaneWidth', 43, 'Height', lambda/4, 'Width', 0.1);
+antenna = monopoleRadial('Height',lambda/4,'RadialLength',lambda/4,'Width',.1,'RadialWidth',.1,'NumRadials',4);
+%array = phased.UCA('NumElements',8,'Element', antenna, 'Radius', lambda/2);
 array = phased.ULA('NumElements',N,'Element', antenna, 'ElementSpacing', lambda/2);
 
 %% Null Widening/Placement
@@ -40,7 +43,7 @@ end
 nullsPerEnemyAzimuth = availableNulls / requiredNulls;
 
 % Place all enemy nulls
-wideEnemyNulls = placeNulls(azEnemy, nullsPerEnemyAzimuth, nullSpacing)
+wideEnemyNulls = placeNulls(azEnemy, nullsPerEnemyAzimuth, nullSpacing);
 
 %% Antenna Weight Calculations
 % Steering Matrix
@@ -68,7 +71,7 @@ end
 %% Plotting
 % Plot 2D Rectangular azimuth cut
 figure
-pattern(array,fc,-180:.1:180,0,'PropagationSpeed',c,'Type','powerdb',...
+pattern(array,fc,-180:.5:180,0,'PropagationSpeed',c,'Type','powerdb',...
     'CoordinateSystem','rectangular','Weights',antennaWeights);
 xlim([-90 90]);
 hold on; legend off;
@@ -82,7 +85,7 @@ hold off;
 
 % Plot 2D Polar azimuth cut
 figure
-pattern(array,fc,-180:.1:180,0,'PropagationSpeed',c,'Type','powerdb',...
+pattern(array,fc,-180:.5:180,0,'PropagationSpeed',c,'Type','powerdb',...
     'CoordinateSystem','polar','Weights',antennaWeights);
 hold on; legend off;
 % TODO - get these lines plotting
@@ -97,7 +100,7 @@ hold off;
 % Plot 3D
 figure
 rotate3d on
-pattern(array,fc,-180:0.5:180,-90:.5:90,'CoordinateSystem','polar','Type','powerdb',...
+pattern(array,fc,-180:1:180,-90:.5:90,'CoordinateSystem','polar','Type','powerdb',...
         'PropagationSpeed',c,'Weights',antennaWeights);
 view([45 45]);
 
