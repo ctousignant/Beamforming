@@ -6,7 +6,9 @@ close all;
 %% Inputs
 N = 8;                % Number of Elements
 azAlly = 30;          % Target Azimuth in degrees
-azEnemy = [-40 -10];  % Null Azimuths
+elAlly = 0;
+azEnemy = [-40 -10 -60];  % Null Azimuths
+elEnemy = [30 60 0];
 fc = 22e6;            % Carrier frequency
 nullSpacing = 5;      % Null spacing in degrees
 
@@ -43,11 +45,11 @@ end
 nullsPerEnemyAzimuth = availableNulls / requiredNulls;
 
 % Place all enemy nulls
-wideEnemyNulls = placeNulls(azEnemy, nullsPerEnemyAzimuth, nullSpacing);
+wideEnemyNulls = placeNulls(azEnemy, elEnemy, nullsPerEnemyAzimuth, nullSpacing);
 
 %% Antenna Weight Calculations
 % Steering Matrix
-steeringMatrix = steervec(getElementPosition(array)/lambda, [azAlly wideEnemyNulls]);
+steeringMatrix = steervec(getElementPosition(array)/lambda, [[azAlly; elAlly] wideEnemyNulls]);
 
 % Desired Response
 desiredResponse = [1 zeros(1, length(wideEnemyNulls))];
@@ -76,7 +78,7 @@ pattern(array,fc,-180:.5:180,0,'PropagationSpeed',c,'Type','powerdb',...
 xlim([-90 90]);
 hold on; legend off;
 for i = 1:length(wideEnemyNulls)
-    plot([wideEnemyNulls(i) wideEnemyNulls(i)],[-500 100],'r--','LineWidth',1)
+    plot([wideEnemyNulls(1,i) wideEnemyNulls(1,i)],[-500 100],'r--','LineWidth',1)
 end
 for z = 1:length(azAlly)
     plot([azAlly(z) azAlly(z)],[-500 100],'g--','LineWidth',1)
@@ -90,7 +92,7 @@ pattern(array,fc,-180:.5:180,0,'PropagationSpeed',c,'Type','powerdb',...
 hold on; legend off;
 % TODO - get these lines plotting
 for i = 1:length(wideEnemyNulls)
-    plot([wideEnemyNulls(i) wideEnemyNulls(i)],[-500 100],'r--','LineWidth',1)
+    plot([wideEnemyNulls(1,i) wideEnemyNulls(1,i)],[-500 100],'r--','LineWidth',1)
 end
 for z = 1:length(azAlly)
     plot([azAlly(z) azAlly(z)],[-500 100],'g--','LineWidth',1)

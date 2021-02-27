@@ -6,7 +6,9 @@ close all
 %% Inputs
 N = 8;                % Number of Elements
 azAlly = 50;          % Target Azimuth in degrees
+elAlly = 0;
 azEnemy = [-50 -60];  % Null Azimuths
+elEnemy = [30 60];
 fc = 22e6;            % Carrier frequency
 nullSpacing = 5;      % TODO: Null spacing in degrees
 
@@ -40,8 +42,8 @@ B = zeros(length(beams), 1);
 B(l)=1/sqrt(2);
 
 % Retrieve Steering Vectors
-d = steervec(getElementPosition(array)/lambda, azAlly);
-V = steervec(getElementPosition(array)/lambda, azEnemy);
+d = steervec(getElementPosition(array)/lambda, [azAlly; elAlly]);
+V = steervec(getElementPosition(array)/lambda, [azEnemy; elEnemy]);
 G = [V d]';
 
 % LS Minimization
@@ -67,6 +69,31 @@ cvx_end
 % Plot 2D Rectangular azimuth cut
 figure
 pattern(array,fc,-180:.5:180,0,'PropagationSpeed',c,'Type','powerdb',...
+    'CoordinateSystem','rectangular','Weights',w);
+xlim([-180 180]);
+hold on; legend off;
+for i = 1:length(azEnemy)
+    plot([azEnemy(i) azEnemy(i)],[-500 100],'r--','LineWidth',1)
+end
+for z = 1:length(azAlly)
+    plot([azAlly(z) azAlly(z)],[-500 100],'g--','LineWidth',1)
+end
+hold off;
+figure
+pattern(array,fc,-180:.5:180,30,'PropagationSpeed',c,'Type','powerdb',...
+    'CoordinateSystem','rectangular','Weights',w);
+xlim([-180 180]);
+hold on; legend off;
+for i = 1:length(azEnemy)
+    plot([azEnemy(i) azEnemy(i)],[-500 100],'r--','LineWidth',1)
+end
+for z = 1:length(azAlly)
+    plot([azAlly(z) azAlly(z)],[-500 100],'g--','LineWidth',1)
+end
+hold off;
+
+figure
+pattern(array,fc,-180:.5:180,60,'PropagationSpeed',c,'Type','powerdb',...
     'CoordinateSystem','rectangular','Weights',w);
 xlim([-180 180]);
 hold on; legend off;

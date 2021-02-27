@@ -1,4 +1,4 @@
-function wideEnemyNulls = placeNulls(azEnemy, nullsPerEnemyAzimuth, nullSpacing)
+function wideEnemyNulls = placeNulls(azEnemy, elEnemy, nullsPerEnemyAzimuth, nullSpacing)
 % Default
 wideEnemyNulls = [];
 
@@ -11,7 +11,7 @@ if rem(nullsPerEnemyAzimuth, 1) == 0
         for i=1:length(azEnemy)
             azLow = azEnemy(i) - (nullSpacing * (nullsPerEnemyAzimuth/2 - 0.5));
             azHigh = azEnemy(i) + (nullSpacing * (nullsPerEnemyAzimuth/2 - 0.5));
-            wideEnemyNulls = [wideEnemyNulls linspace(azLow, azHigh, nullsPerEnemyAzimuth)];
+            wideEnemyNulls = [wideEnemyNulls [linspace(azLow, azHigh, nullsPerEnemyAzimuth); ones(1,nullsPerEnemyAzimuth)*elEnemy(i)]];
         end
     % If there are an odd number of nulls per enemy azimuth
     else
@@ -19,7 +19,7 @@ if rem(nullsPerEnemyAzimuth, 1) == 0
         for i=1:length(azEnemy)
             azLow = azEnemy(i) - (nullSpacing * floor(nullsPerEnemyAzimuth/2));
             azHigh = azEnemy(i) + (nullSpacing * floor(nullsPerEnemyAzimuth/2));
-            wideEnemyNulls = [wideEnemyNulls linspace(azLow, azHigh, nullsPerEnemyAzimuth)];
+            wideEnemyNulls = [wideEnemyNulls [linspace(azLow, azHigh, nullsPerEnemyAzimuth); ones(1,nullsPerEnemyAzimuth)*elEnemy(i)]];
         end
     end
 % If the nulls cannot be divided up evenly
@@ -31,10 +31,9 @@ else
     for j=1:remainingNulls
         numNulls(j) = numNulls(j) + 1;
     end
-    numNulls;
     % Make a recursive call to determine null placement
     for i=1:length(azEnemy)
-        wideEnemyNulls = [wideEnemyNulls placeNulls(azEnemy(i), numNulls(i), nullSpacing)];
+        wideEnemyNulls = [wideEnemyNulls placeNulls(azEnemy(i), elEnemy(i), numNulls(i), nullSpacing)];
     end
 end
 
