@@ -107,28 +107,28 @@ title('Response at Carrier');
 % zlim(zrange);
 % caxis(zrange);
 
-bw = 1e6;
-step = 1000;
-
-figure
-parallelResults = zeros(361,(bw/step)+1);
-parfor i = 0:(bw/step)
-    [parallelResults(:,i+1), ~, ~] = pattern(array,(fc-(bw/2)+(i*step)),-180:1:180,0,'PropagationSpeed',c,'Type','powerdb','CoordinateSystem','polar','Normalize',false,'Weights',w);
-end
-
-[~, plot_azimuth, ~] = pattern(array,(fc),-180:1:180,0,'PropagationSpeed',c,'Type','powerdb','CoordinateSystem','polar','Normalize',false,'Weights',w);
-zrange = ([-75 15]);
-plot_freq = fc-(bw/2):step:fc+(bw/2);
-plot_freq = plot_freq./1e+6;
-surf(plot_freq, plot_azimuth, parallelResults);
-shading interp;
-view(0,90);
-c = colorbar;
-c.Label.String = 'Gain (dBi)';
-caxis(zrange);
-ylabel('Azimuth Angle (deg)');
-xlabel('Frequency (MHz)')
-title('Affect of Transmission Bandwidth on Pattern (Elev. = 0 deg)');
+% bw = 1e6;
+% step = 1000;
+% 
+% figure
+% parallelResults = zeros(361,(bw/step)+1);
+% parfor i = 0:(bw/step)
+%     [parallelResults(:,i+1), ~, ~] = pattern(array,(fc-(bw/2)+(i*step)),-180:1:180,0,'PropagationSpeed',c,'Type','powerdb','CoordinateSystem','polar','Normalize',false,'Weights',w);
+% end
+% 
+% [~, plot_azimuth, ~] = pattern(array,(fc),-180:1:180,0,'PropagationSpeed',c,'Type','powerdb','CoordinateSystem','polar','Normalize',false,'Weights',w);
+% zrange = ([-75 15]);
+% plot_freq = fc-(bw/2):step:fc+(bw/2);
+% plot_freq = plot_freq./1e+6;
+% surf(plot_freq, plot_azimuth, parallelResults);
+% shading interp;
+% view(0,90);
+% c = colorbar;
+% c.Label.String = 'Gain (dBi)';
+% caxis(zrange);
+% ylabel('Azimuth Angle (deg)');
+% xlabel('Frequency (MHz)')
+% title('Affect of Transmission Bandwidth on Pattern (Elev. = 0 deg)');
 
 
 % phi = az';
