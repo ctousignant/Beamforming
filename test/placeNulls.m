@@ -33,7 +33,7 @@ else
     end
     % Make a recursive call to determine null placement
     for i=1:length(azEnemy)
-        wideEnemyNulls = [wideEnemyNulls placeNulls(azEnemy(i), elEnemy(i), numNulls(i), nullSpacing)];
+        wideEnemyNulls = [wideEnemyNulls placeNulls(azEnemy(i), elEnemy(i), numNulls(i), nullSpacing(i))];
     end
 end
 

@@ -5,10 +5,10 @@ close all;
 
 %% Inputs
 N = 8;                % Number of Elements
-azAlly = 30;          % Target Azimuth in degrees
-elAlly = 0;
-azEnemy = [-40 -10 -60];  % Null Azimuths
-elEnemy = [30 60 0];
+azAlly = 0;          % Target Azimuth in degrees
+elAlly = 20;
+azEnemy = [70 20];  % Null Azimuths
+elEnemy = [20 20];
 fc = 22e6;            % Carrier frequency
 azDiff = azAlly - azEnemy;
 for i=1:length(azDiff)
