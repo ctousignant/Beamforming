@@ -10,7 +10,18 @@ elAlly = 0;
 azEnemy = [-40 -10 -60];  % Null Azimuths
 elEnemy = [30 60 0];
 fc = 22e6;            % Carrier frequency
-nullSpacing = 5;      % Null spacing in degrees
+azDiff = azAlly - azEnemy;
+for i=1:length(azDiff)
+    if azDiff(i) > 90
+        azDiff(i) = 180 - azDiff(i);
+    end
+end
+nullSpacing = 1.033.^(abs(azDiff))*1.5;      % Null spacing in degrees
+for i=1:length(nullSpacing)
+    if nullSpacing(i) >= 5
+      nullSpacing(i) = 5;
+    end
+end      
 
 %% Constants
 c = physconst('LightSpeed'); % signal propagation speed
