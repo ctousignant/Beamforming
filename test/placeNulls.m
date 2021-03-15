@@ -9,16 +9,16 @@ if rem(nullsPerEnemyAzimuth, 1) == 0
     if rem(nullsPerEnemyAzimuth, 2) == 0
         disp("There is an even number of nulls per enemy");
         for i=1:length(azEnemy)
-            azLow = azEnemy(i) - (nullSpacing * (nullsPerEnemyAzimuth/2 - 0.5));
-            azHigh = azEnemy(i) + (nullSpacing * (nullsPerEnemyAzimuth/2 - 0.5));
+            azLow = azEnemy(i) - (nullSpacing(i) * (nullsPerEnemyAzimuth/2 - 0.5));
+            azHigh = azEnemy(i) + (nullSpacing(i) * (nullsPerEnemyAzimuth/2 - 0.5));
             wideEnemyNulls = [wideEnemyNulls [linspace(azLow, azHigh, nullsPerEnemyAzimuth); ones(1,nullsPerEnemyAzimuth)*elEnemy(i)]];
         end
     % If there are an odd number of nulls per enemy azimuth
     else
         disp("There is an odd number of nulls per enemy");
         for i=1:length(azEnemy)
-            azLow = azEnemy(i) - (nullSpacing * floor(nullsPerEnemyAzimuth/2));
-            azHigh = azEnemy(i) + (nullSpacing * floor(nullsPerEnemyAzimuth/2));
+            azLow = azEnemy(i) - (nullSpacing(i) * floor(nullsPerEnemyAzimuth/2));
+            azHigh = azEnemy(i) + (nullSpacing(i) * floor(nullsPerEnemyAzimuth/2));
             wideEnemyNulls = [wideEnemyNulls [linspace(azLow, azHigh, nullsPerEnemyAzimuth); ones(1,nullsPerEnemyAzimuth)*elEnemy(i)]];
         end
     end
@@ -33,7 +33,7 @@ else
     end
     % Make a recursive call to determine null placement
     for i=1:length(azEnemy)
-        wideEnemyNulls = [wideEnemyNulls placeNulls(azEnemy(i), elEnemy(i), numNulls(i), nullSpacing)];
+        wideEnemyNulls = [wideEnemyNulls placeNulls(azEnemy(i), elEnemy(i), numNulls(i), nullSpacing(i))];
     end
 end
 

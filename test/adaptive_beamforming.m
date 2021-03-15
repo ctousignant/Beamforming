@@ -5,12 +5,23 @@ close all;
 
 %% Inputs
 N = 8;                % Number of Elements
-azAlly = 30;          % Target Azimuth in degrees
-elAlly = 0;
-azEnemy = [-40 -10 -60];  % Null Azimuths
-elEnemy = [30 60 0];
+azAlly = 0;          % Target Azimuth in degrees
+elAlly = 20;
+azEnemy = [70 20];  % Null Azimuths
+elEnemy = [20 20];
 fc = 22e6;            % Carrier frequency
-nullSpacing = 5;      % Null spacing in degrees
+azDiff = azAlly - azEnemy;
+for i=1:length(azDiff)
+    if azDiff(i) > 90
+        azDiff(i) = 180 - azDiff(i);
+    end
+end
+nullSpacing = 1.033.^(abs(azDiff))*1.5;      % Null spacing in degrees
+for i=1:length(nullSpacing)
+    if nullSpacing(i) >= 5
+      nullSpacing(i) = 5;
+    end
+end      
 
 %% Constants
 c = physconst('LightSpeed'); % signal propagation speed
