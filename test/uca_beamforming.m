@@ -6,9 +6,9 @@ close all
 %% Inputs
 N = 8;                % Number of Elements
 azAlly = 50;          % Target Azimuth in degrees
-elAlly = 0;
+elAlly = 20;
 azEnemy = [-50 -30];  % Null Azimuths
-elEnemy = [0 0];
+elEnemy = [20 20];
 fc = 22e6;            % Carrier frequency
 nullSpacing = 5;      % TODO: Null spacing in degrees
 
@@ -16,7 +16,7 @@ nullSpacing = 5;      % TODO: Null spacing in degrees
 c = physconst('LightSpeed');    % Speed of Light
 lambda = c/fc;                  % Wavelength
 diameter = lambda;              % Diameter of Array
-reservedDOF = [1 1 1 2 2 2];    % Reserved Degrees of Freedom based on N [3 4 ... 8]
+reservedDOF = [0 1 1 1 2 3 3];    % Reserved Degrees of Freedom based on N [2 3 4 ... 8]
 
 
 %% Globally Scoped Defines
@@ -33,7 +33,7 @@ array = phased.UCA('NumElements',N,'Element', antenna, 'Radius', lambda/2);
 
 %% Null Widening/Placement
 % Determine number of available nulls to place, leaving some free
-availableNulls = N - 1 - reservedDOF(N-2);
+availableNulls = N - 1 - reservedDOF(N-1);
 requiredNulls = length(azEnemy);
 if availableNulls < requiredNulls
     error("Error: With %i antennas, only %i nulls available. Requested %i nulls", N, availableNulls, requiredNulls);
@@ -81,7 +81,7 @@ cvx_end
 %% Plotting
 % Plot 2D Rectangular azimuth cut
 figure
-pattern(array,fc,-180:.5:180,0,'PropagationSpeed',c,'Type','powerdb',...
+pattern(array,fc,-180:.5:180,20,'PropagationSpeed',c,'Type','powerdb',...
     'CoordinateSystem','rectangular','Weights',w);
 xlim([-180 180]);
 hold on; legend off;
